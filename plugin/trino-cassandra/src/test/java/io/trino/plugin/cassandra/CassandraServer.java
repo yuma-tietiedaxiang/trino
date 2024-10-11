@@ -24,7 +24,6 @@ import io.airlift.json.JsonCodec;
 import io.airlift.log.Logger;
 import io.airlift.units.Duration;
 import org.testcontainers.cassandra.CassandraContainer;
-import org.testcontainers.containers.wait.CassandraQueryWaitStrategy;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.Closeable;
@@ -82,8 +81,7 @@ public class CassandraServer
                 .withCopyFileToContainer(forHostPath(prepareCassandraYaml(configFileName)), configPath)
                 .withEnv(environmentVariables)
                 .withStartupTimeout(java.time.Duration.ofMinutes(10))
-                // TODO: https://github.com/testcontainers/testcontainers-java/issues/9337
-                .waitingFor(new CassandraQueryWaitStrategy());
+                .withWorkingDirectory("/");
         this.dockerContainer.start();
 
         ProgrammaticDriverConfigLoaderBuilder driverConfigLoaderBuilder = DriverConfigLoader.programmaticBuilder();
